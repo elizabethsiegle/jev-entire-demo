@@ -5,7 +5,17 @@ import os
 import sys
 from pathlib import Path
 
-from typesafe_sdk import Noul, TypeSafeClient, TypeSafeError
+try:
+    from typesafe_sdk import Noul, TypeSafeClient, TypeSafeError
+except ModuleNotFoundError as error:
+    if error.name != "typesafe_sdk":
+        raise
+    raise SystemExit(
+        "This Python environment does not have typesafe-sdk installed.\n"
+        "Run from the repository root:\n"
+        "uv run --python 3.12 --with-requirements requirements.txt "
+        "review_session.py request.txt example/session.json example/change.diff"
+    ) from None
 
 
 def main():

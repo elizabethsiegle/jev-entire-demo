@@ -15,19 +15,17 @@ python3 -m unittest -v
 
 The offline [Asha Tea House menu](https://ashateahouse.square.site/?location=AJMSYRF8H2C90) example fails twice, then succeeds on attempt three. The four tests check recovery, immediate success, the final connection error, and other errors.
 
-To ask Jev about the recorded session, use your own [TypeSafe key](https://console.typesafe.ai). With [uv installed](https://docs.astral.sh/uv/getting-started/installation/), create a Python 3.12 environment explicitly:
+To ask Jev about the recorded session, use your own [TypeSafe key](https://console.typesafe.ai). With [uv installed](https://docs.astral.sh/uv/getting-started/installation/), these commands select Python 3.12 and install the SDK in the environment that runs the script:
 
 ```sh
-uv venv --python 3.12 .venv
-uv pip install --python .venv/bin/python -r requirements.txt
 export TYPESAFE_API_KEY='your-key-here'
-.venv/bin/python review_session.py request.txt example/session.json example/change.diff
-.venv/bin/python review_session.py request.txt example/without-tests.json example/change.diff
+uv run --python 3.12 --with-requirements requirements.txt review_session.py request.txt example/session.json example/change.diff
+uv run --python 3.12 --with-requirements requirements.txt review_session.py request.txt example/without-tests.json example/change.diff
 ```
 
 These are two real API calls. The second input is a copy with the test command and output removed; the agent's success claims remain. Jev usage may incur charges. Keep your key local.
 
-If pip reports “No matching distribution” for `typesafe-sdk`, check the Python used by that pip. The SDK requires Python 3.10+; macOS's `python3` may still be 3.9. An existing `.venv` keeps the Python it was created with. Run `.venv/bin/python --version`; if it's below 3.10, recreate that environment with Python 3.12 before installing.
+The SDK requires Python 3.10+; macOS's `python3` may still be 3.9. Use the full `uv run` command above. Running plain `python3 review_session.py` can select a different Python without the SDK.
 
 ## What to look at
 
@@ -105,13 +103,13 @@ cd "$DEMO_ROOT"
 Inspect the exported transcript: it must contain your task, edits, actual test command, completed result, and success claim. Review it for private content before sending it to TypeSafe. The evaluator accepts a compact JSON list or Codex JSONL, filtering the latter to conversation messages and tool calls/results. It is not a secret scanner. If Entire cannot find a checkpoint, fix recording before continuing. Then make the first real request:
 
 ```sh
-.venv/bin/python review_session.py local/request.txt local/session.jsonl local/change.diff > local/jev-original.json
+uv run --python 3.12 --with-requirements requirements.txt review_session.py local/request.txt local/session.jsonl local/change.diff > local/jev-original.json
 ```
 
 For the contrasting input, copy `local/session.jsonl` to `local/without-tests.jsonl`. Remove only the dedicated test tool call and its matching result, identified by `call_id`. If tests span several calls, remove all execution/polling pairs that carry that evidence. Preserve the agent's messages, edits, request, and diff. Inspect your copy to confirm no successful test output remains. Then make the second real request:
 
 ```sh
-.venv/bin/python review_session.py local/request.txt local/without-tests.jsonl local/change.diff > local/jev-without-tests.json
+uv run --python 3.12 --with-requirements requirements.txt review_session.py local/request.txt local/without-tests.jsonl local/change.diff > local/jev-without-tests.json
 cat local/jev-original.json local/jev-without-tests.json
 ```
 
