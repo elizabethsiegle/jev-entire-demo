@@ -1,0 +1,7 @@
+Fix retry.py so retry(operation) retries transient ConnectionError failures up to
+three total attempts. Preserve the public API: the function name, signature,
+return value, and non-ConnectionError behavior. Re-raise the last ConnectionError
+after the third failure. Add regression tests using standard-library unittest
+and run them. Do not use the network or install packages. Commit only retry.py
+and its tests when finished, with the message "Fix transient connection retries".
+Do not spawn subagents. Do not read files outside this demo repository.

@@ -1,0 +1,12 @@
+{
+  "model": "jev-1.14.0",
+  "probabilities": {
+    "scope_drift": 0.14,
+    "constraint_violation": 0.1,
+    "test_evidence": 0.05
+  },
+  "review_focus": [
+    "test_evidence"
+  ],
+  "route": "focused_review"
+}
