@@ -15,17 +15,19 @@ python3 -m unittest -v
 
 The offline [Asha Tea House menu](https://ashateahouse.square.site/?location=AJMSYRF8H2C90) example fails twice, then succeeds on attempt three. The four tests check recovery, immediate success, the final connection error, and other errors.
 
-To ask Jev about the recorded session, use **Python 3.10+** and your own [TypeSafe key](https://console.typesafe.ai):
+To ask Jev about the recorded session, use your own [TypeSafe key](https://console.typesafe.ai). With [uv installed](https://docs.astral.sh/uv/getting-started/installation/), create a Python 3.12 environment explicitly:
 
 ```sh
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
+uv venv --python 3.12 .venv
+uv pip install --python .venv/bin/python -r requirements.txt
 export TYPESAFE_API_KEY='your-key-here'
 .venv/bin/python review_session.py request.txt example/session.json example/change.diff
 .venv/bin/python review_session.py request.txt example/without-tests.json example/change.diff
 ```
 
 These are two real API calls. The second input is a copy with the test command and output removed; the agent's success claims remain. Jev usage may incur charges. Keep your key local.
+
+If pip reports “No matching distribution” for `typesafe-sdk`, check the Python used by that pip. The SDK requires Python 3.10+; macOS's `python3` may still be 3.9. An existing `.venv` keeps the Python it was created with. Run `.venv/bin/python --version`; if it's below 3.10, recreate that environment with Python 3.12 before installing.
 
 ## What to look at
 
